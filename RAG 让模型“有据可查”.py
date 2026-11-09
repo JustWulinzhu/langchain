@@ -82,5 +82,5 @@ rag_chain = (
     | StrOutputParser() # 从 AIMessage 中提取出纯文本内容，输出最终的字符串答案
 )
 
-response = rag_chain.invoke("介绍下wlz公司")
+response = rag_chain.invoke("介绍下xxx公司")
 print(response)
