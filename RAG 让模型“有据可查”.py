@@ -23,16 +23,29 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # langchain_community包已经弃用，改用langchain_chroma引入Chroma
 from langchain_chroma import Chroma
 
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
+
 from dotenv import load_dotenv
 load_dotenv()
 
 #用几段文本模拟“知识库”
-docs = [
-    Document(page_content="wlz公司创建于2020年9月1日，地点是在北京朝阳区双桥"),
-    Document(page_content="注册资金10万元"),
-    Document(page_content="公司员工10人"),
-    Document(page_content="主要从事AI agent开发")
-]
+# docs = [
+#     Document(page_content="wlz公司创建于2020年9月1日，地点是在北京朝阳区双桥"),
+#     Document(page_content="注册资金10万元"),
+#     Document(page_content="公司员工10人"),
+#     Document(page_content="主要从事AI agent开发")
+# ]
+
+# 用加载器读取./docs目录下面的所有的text文件
+loader = DirectoryLoader(
+    path ="./docs",
+    glob = "*.txt",
+    loader_cls = TextLoader,
+    loader_kwargs = {"encoding": "utf-8"},
+    show_progress = True
+)
+# 加载所有文档，结果是一个 Document 列表
+docs = loader.load()
 
 # 实例化一个递归字符文本切分器
 # 每个文本块的最大字符数限制为 256
@@ -82,5 +95,5 @@ rag_chain = (
     | StrOutputParser() # 从 AIMessage 中提取出纯文本内容，输出最终的字符串答案
 )
 
-response = rag_chain.invoke("介绍下xxx公司")
+response = rag_chain.invoke("索引类型有什么")
 print(response)
