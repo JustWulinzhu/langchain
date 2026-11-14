@@ -25,7 +25,8 @@ async def main() :
         }
     }) as adapter :
         tools = await adapter.list_tools()
-        print(tools)
+        for tool in tools :
+            print(tool.name)
 
         agent = create_agent(
             model = llm,

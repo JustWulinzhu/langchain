@@ -5,7 +5,9 @@ from mcp.server import MCPServer
 mcp_server = MCPServer("weather-server")
 
 # 定义一个查询天气的 mcp工具
-@mcp_server.tool() # 它的作用是把下面的 Python 函数注册为 MCP Tool。原来普通函数只能被 Python 代码直接调用，现在它可以被 MCP Client 发现和调用。
+# 它的作用是把下面的 Python 函数注册为 MCP Tool。原来普通函数只能被 Python 代码直接调用，现在它可以被 MCP Client 发现和调用。
+# @mcp_server 怎么写 取决于前面 的MCPServer 变量名是怎么定义的，这里定义的是mcp_
+@mcp_server.tool()
 def get_weather(city: str) -> str:
     """"
         查询指定城市的天气
