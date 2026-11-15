@@ -14,11 +14,11 @@ from pydantic import BaseModel, Field
 # 结构化输出，让ai按照该类定义的数据结构返回
 # description是干啥的：这是 Pydantic 在 AI 场景下的独有价值：description 不是写给人看的注释，是直接喂给模型的提示语。所以描述写得越清楚，模型填得越准。
 class OrderFormat(BaseModel) :
-    is_found: bool = Field(description = "是否找到对应的订单")
-    order_id: str | None = Field(description = "订单id，找不到输出null")
-    amount: str | None = Field(description = "订单金额，找不到输出null")
-    status: str | None = Field(description = "订单状态，找不到输出null")
-    logistics: str | None = Field(description = "物流状态，找不到输出null")
+    is_found: bool = Field(description = "是否找到对应的订单") # 增加布尔类的字段，标记这次查询是否查到了，true/false
+    order_id: str | None = Field(description = "订单id，没有查询到时为null")
+    amount: str | None = Field(description = "订单金额，没有查询到时为null")
+    status: str | None = Field(description = "订单状态，没有查询到时为null")
+    logistics: str | None = Field(description = "物流状态，没有查询到时为null")
     result_message: str = Field(description = "查询的结果说明，是否找到了对应的订单")
 
 llm = ChatOpenAI(
@@ -67,6 +67,7 @@ async def main() :
         # 这两处用法符合 LangChain 当前 Agent 结构化输出的设计。
         # Agent 会把结构化结果放在最终状态的 structured_response 字段中。
         structure_data = result.get("structured_response")
+        print(structure_data)
         if structure_data.is_found:
             print("订单id：" + structure_data.order_id + "，订单金额：" + structure_data.amount + "，订单状态：" + structure_data.status + "，物流状态：" + structure_data.logistics)
         else:
