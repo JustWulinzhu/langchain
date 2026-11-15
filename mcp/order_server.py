@@ -24,7 +24,7 @@ LOGISTICS = {
 
 @mcp_server.tool()
 def get_order_by_id(order_id: str) -> str :
-    order = ORDERS[order_id]
+    order = ORDERS.get(order_id) # 别用ORDERS[order_id] 如果某个key不存在会直接报错
     if order is None :
         return "订单不存在"
     # str 类型转换，转换成字符串类型
@@ -32,16 +32,17 @@ def get_order_by_id(order_id: str) -> str :
 
 @mcp_server.tool()
 def get_logistics_by_order_id(order_id: str) -> str :
-    logistics = LOGISTICS[order_id]
-    if order_id not in ORDERS :
+    order = ORDERS.get(order_id)
+    if order is None:
         return "订单不存在"
+    logistics = LOGISTICS.get(order_id)
     if logistics is None :
         return "物流信息不存在"
     return str(logistics)
 
 @mcp_server.tool()
 def get_amount_by_order_id(order_id: str) -> str :
-    order = ORDERS[order_id]
+    order = ORDERS.get(order_id)
     if order is None :
         return "订单不存在"
     return f"订单金额为：{order['amount']}"
