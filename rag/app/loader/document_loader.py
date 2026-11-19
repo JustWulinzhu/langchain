@@ -15,6 +15,3 @@ def load_pdf(file_path: str):
     print(f"documents: {documents}")
 
     return documents
-
-documents = load_pdf("/Users/wulinzhu/Documents/hc/project/python/langchain/rag/data/docs/TikTok_API_Get_Campaigns_v1.3.pdf")
-print(documents)
