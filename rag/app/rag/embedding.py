@@ -1,6 +1,21 @@
 from langchain_community.embeddings import ZhipuAIEmbeddings
 from app.config import ZHIPU_EMBEDDING_MODEL, ZHIPU_API_KEY
+from functools import lru_cache
 
+# @lru_cache(maxsize = 1) 是啥意思？
+# @lru_cache(maxsize = 1)（核心缓存装饰器）
+# lru_cache 是 Python 内置模块 functools 中的缓存工具（LRU 全称 Least Recently Used，即“最近最少使用”缓存算法）。
+# maxsize = 1：表示内存中最多只保留 1 个该函数的返回结果。
+# 实际效果：
+# 第 1 次调用 get_embedding_model() 时：正常执行函数内部代码，初始化连接智谱 API 的客户端对象，并把这个对象存进内存缓存里。
+# 第 2 次及以后再调用 get_embedding_model() 时：不再重新执行初始化逻辑，而是直接从内存中瞬间取出第 1 次创建好的对象返回。
+
+# 为什么要加 @lru_cache(maxsize = 1)？
+# 在你的 RAG 系统中，无论是在上传 PDF 文档入库时，还是在用户每次发消息检索文档时，都会调用 get_embedding_model()：
+# 如果不加缓存：每次用户提问，程序都要重新读取配置、实例化客户端对象、重新建立底层 HTTP 连接池，既浪费时间又消耗额外内存。
+# 加上缓存后：整个后端服务运行期间，全局只会创建这一个客户端实例并反复复用，响应速度更快、资源占用更低，是 FastAPI 项目中管理客户端连接的经典写法。
+
+@lru_cache(maxsize = 1)
 def get_embedding_model():
     """
     创建 Embedding 模型（智谱 embedding-3）
