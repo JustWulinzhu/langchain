@@ -2,6 +2,7 @@ from app.rag.vector_store import get_vector_store
 
 # 定义 从向量数据库检索 方法
 # top_k: int = 5：控制返回最相似的文档片段数量，默认返回前 5 条
+# 注意这里检索出来的内容不是AI的答案，而是AI回答用户问题的依据，AI会依据这个组织自然语言回答用户的问题
 def search_document(question: str, top_k: int = 5):
     """
     根据用户问题检索文档
@@ -20,9 +21,9 @@ def search_document(question: str, top_k: int = 5):
 
     for doc, score in results:
         documents.append({
-            "content": doc.page_content,
-            "source": doc.metadata.get("source", ""),
-            "page": doc.metadata.get("page"),
+            "content": doc.page_content, # 切分出来的具体文本内容本身
+            "source": doc.metadata.get("source", ""), # 这篇内容是从哪个文件里提取出来的（文件路径或文件名）
+            "page": doc.metadata.get("page"), # 这段文字在原 PDF 文件中的第几页。
             "score": float(score)
         })
 
