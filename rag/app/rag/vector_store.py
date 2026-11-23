@@ -69,7 +69,7 @@ def save_chunks(
         chunks,
         file_path: str,
         knowledge_id: str,
-        doc_id: str,
+        doc_id: str = "",
         batch_size: int = 50) -> List[str]:
     """
     将文本切片保存到向量数据库
@@ -112,7 +112,7 @@ def save_chunks(
         chunk.metadata["chunk_index"] = index
 
         # 3. 生成稳定 ID：知识库ID + 文档ID + 切片序号
-        chunk_id = f"{knowledge_base_id}::{doc_id}::{index}"
+        chunk_id = f"{knowledge_id}::{doc_id}::{index}"
         stable_ids.append(chunk_id)
 
     # 步骤 D：分批写入 Chroma（显式传入 ids 参数）
@@ -121,7 +121,7 @@ def save_chunks(
         batch_docs = chunks[i: i + batch_size]
         batch_ids = stable_ids[i: i + batch_size]
 
-        ids = vector_store.add_documents(batch_docs, batch_ids)
+        ids = vector_store.add_documents(batch_docs, ids = batch_ids)
         all_saved_ids.extend(ids)
 
     print(f"成功保存了{len(all_saved_ids)}个文本块到知识库{knowledge_id}中")

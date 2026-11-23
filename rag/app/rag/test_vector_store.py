@@ -4,6 +4,6 @@ from app.rag.vector_store import save_chunks
 
 pdf_documents = load_pdf("rag/data/docs/TikTok_API_Get_Campaigns_v1.3.pdf")
 chunks = document_splitter(pdf_documents)
-ids = save_chunks(chunks)
+ids = save_chunks(chunks, "rag/data/docs/TikTok_API_Get_Campaigns_v1.3.pdf", "111")
 
 print("知识库构建完成，chunks已写入到向量数据库")
