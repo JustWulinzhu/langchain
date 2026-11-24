@@ -1,8 +1,11 @@
+# 导入 Python 标准库中的正则表达式模块
 import re
 from pathlib import Path
 from typing import List
 
+# LangChain 的核心数据结构，每个实例包含两个核心属性：page_content（字符串正文）和 metadata（字典格式的元数据，如文件名、页码、标题路径）。
 from langchain_core.documents import Document
+# BSHTMLLoader、Docx2txtLoader、PyPDFLoader、UnstructuredWordDocumentLoader：LangChain 社区提供的多种文件格式解析器，分别处理 HTML、Word（轻量级）、PDF 和 Word（结构化元素级）
 from langchain_community.document_loaders import (
     BSHTMLLoader,
     Docx2txtLoader,
@@ -10,7 +13,9 @@ from langchain_community.document_loaders import (
     UnstructuredWordDocumentLoader,
 )
 from langchain_text_splitters import (
+    # MarkdownHeaderTextSplitter：按 Markdown 标题（#、## 等）进行语义切分的切分器
     MarkdownHeaderTextSplitter,
+    # RecursiveCharacterTextSplitter：递归字符切分器，按指定的分隔符优先级将超长文本切分成指定大小的块。
     RecursiveCharacterTextSplitter,
 )
 
@@ -65,7 +70,9 @@ def load_api_document(file_path: str) -> List[Document]:
     返回:
         List[Document]: 解析后的文档对象列表
     """
+    # 将字符串路径转换为 Path 对象
     path = Path(file_path)
+    # 转为对象之后 提取文件扩展名 并且转小写
     suffix = path.suffix.lower()
 
     if suffix == ".pdf":
@@ -109,7 +116,7 @@ def load_api_document(file_path: str) -> List[Document]:
             return Docx2txtLoader(str(path)).load()
 
     elif suffix in {".md", ".markdown"}:
-        # 4. Markdown 文档：直接按 UTF-8 读取，完整保留标题（#）、表格（|...|）和代码块
+        # 4.使用 Path.read_text 以 UTF-8 编码直接读取原文，完整保留 # 标题、Markdown 表格和 ``` 代码块，封装为单个 Document 返回
         content = path.read_text(encoding="utf-8")
         return [
             Document(
