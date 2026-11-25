@@ -1,10 +1,18 @@
+# 从 Python 标准库 pathlib 导入 Path
+# Path 用于以面向对象方式处理文件路径，例如获取文件名、后缀、读取文本等
 from pathlib import Path
 from typing import List
+
+# 从 LangChain 核心包导入 Document 类
+# Document 通常包含两个核心字段：1、page_content：文档正文内容；2、metadata：元数据，例如来源文件、文件类型等
+# 在 RAG、向量数据库、文本切分等流程中，Document 是常用的数据载体
 from langchain_core.documents import Document
 
 # 生产环境推荐安装：
 # pip install markitdown pymupdf4llm pandas tabulate
 import pymupdf4llm
+
+# 微软开源的文档转 Markdown 工具
 from markitdown import MarkItDown
 
 
