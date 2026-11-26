@@ -4,6 +4,7 @@ from langchain_core.documents import Document
 # 从项目配置文件 app/config.py 中导入的本地目录路径，用于指定向量数据在磁盘上的持久化存储位置
 from app.config import CHROMA_DIR
 from app.rag.embedding import get_embedding_model
+from typing import List
 import hashlib
 
 # 计算文件hash值
